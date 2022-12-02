@@ -18,11 +18,13 @@ def user(name):
 # Par convention, on utilise le même nom : user_name=name > name=name
 
 # Création d'un page d'erreur customisée 
-# invalid URL
+
+# Invalid URL
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404 #", +code erreur obligatoire avec errorhandler "
 
+# Internal error server
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template("500.html"), 500
