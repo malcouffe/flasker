@@ -1,0 +1,23 @@
+<h1>Hello World</h1>
+<p>This is a test</p>
+<p>Mon nom est {{ first_name }}</p>
+<p>{{ stuff|safe}}</p> <!-- Utilisation d'un filtre Jinja -->
+
+<h3>pizza préférée</h3>
+{% for i in pizza %}
+    {{ i }}<br/>
+{% endfor %}
+
+<br/><br/>
+{{ pizza.0 }}
+
+<!-- Différents filtres Jinja -->
+<!-- safe : envoi les balises html depuis le python vers la page WEB -->
+<!-- capitalize : met une majuscule avant -->
+<!-- lower : passe en miniscule les variables -->
+<!-- upper : passe en majuscule les variables -->
+<!-- title : passe en miniscule les variables -->
+<!-- trim : enlève les espaces à la fin des texts html -->
+<!-- striptags : retire toutes les balises html (utile pour éviter les piratages) -->
+<!-- reverse -->
+<!-- le reste est disponible sur le site internet Jinja-->
