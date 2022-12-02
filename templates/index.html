@@ -1,15 +1,20 @@
-<h1>Hello World</h1>
-<p>This is a test</p>
-<p>Mon nom est {{ first_name }}</p>
-<p>{{ stuff|safe}}</p> <!-- Utilisation d'un filtre Jinja -->
+{% extends 'base.html' %}
 
-<h3>pizza préférée</h3>
-{% for i in pizza %}
-    {{ i }}<br/>
-{% endfor %}
+{% block content %}
+    <h1>Hello World</h1>
+    <p>This is a test</p>
+    <p>Mon nom est {{ first_name }}</p>
+    <p>{{ stuff|safe}}</p> <!-- Utilisation d'un filtre Jinja -->
 
-<br/><br/>
+    <h3>pizza préférée</h3>
+    {% for i in pizza %}
+        {{ i }}<br/>
+    {% endfor %}
+
+    <br/><br/>
 {{ pizza.0 }}
+
+{% endblock %}
 
 <!-- Différents filtres Jinja -->
 <!-- safe : envoi les balises html depuis le python vers la page WEB -->
