@@ -1,0 +1,1 @@
+document.getElementById('demo').innerHTML = "C'est écrit en Javascript"
