@@ -7,12 +7,13 @@ from datetime import datetime
 
 # Création d'un instance flask 
 app = Flask(__name__)
-# Ajout de la base de données
-# Ancienne bdd SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+
+## Ajout de la base de données
+## Ancienne bdd SQLite
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
 # Nouvelle bdd mySQL
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:SQL123@localhost/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password123@localhost/users'
 
 # Clé secrète 
 app.config['SECRET_KEY'] = "mot de passe à ne pas partager"
