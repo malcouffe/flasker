@@ -1,3 +1,5 @@
+# code permettant de créer une base de données mysql à ne faire tourner qu'une fois
+
 import mysql.connector 
 
 mydb = mysql.connector.connect(
@@ -8,7 +10,7 @@ mydb = mysql.connector.connect(
 
 my_cursor = mydb.cursor()
 
-my_cursor.execute("CREATE DATABASE users")
+# my_cursor.execute("CREATE DATABASE users")
 
 my_cursor.execute("SHOW DATABASES")
 for db in my_cursor:

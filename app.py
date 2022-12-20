@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -22,7 +22,6 @@ app.config['SECRET_KEY'] = "mot de passe à ne pas partager"
 db = SQLAlchemy(app)
 
 
-
 # Création d'un modèle 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -33,7 +32,7 @@ class Users(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
-# Création d'une classe Form
+# Création du formulaire UserForm
 class UserForm(FlaskForm):
     name = StringField("Nom", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
@@ -59,8 +58,7 @@ def user(name):
     return render_template('user.html', user_name=name)
 # Par convention, on utilise le même nom : user_name=name > name=name
 
-# Création d'un page d'erreur customisée 
-
+## Création d'un page d'erreur customisée 
 # Invalid URL
 @app.errorhandler(404)
 def page_not_found(e):
@@ -71,6 +69,8 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template("500.html"), 500
 
+
+# Page "name"
 @app.route('/name', methods=['GET', 'POST'])
 def name():
     name = None
@@ -92,11 +92,35 @@ def add_user():
     if form.validate_on_submit():
         user = Users.query.filter_by(email = form.email.data).first() # test si l'adresse mail existe déjà dans la bdd, ne devrait rien renvoyer si pas d'adresse dans la bdd
         if user is None:
-            user = Users(name = form.name.data, email=form.email.data)
+            user = Users(name = form.name.data, email = form.email.data)
             db.session.add(user)
             db.session.commit()
         name = form.name.data
         form.name.data = ''
         form.email.data = ''
     our_users = Users.query.order_by(Users.date_added)
-    return render_template("add_user.html", form = form, name=name, our_users=our_users)
+    return render_template("add_user.html", form = form, name = name, our_users = our_users)
+
+# MAJ utilisateur 
+@app.route('/update/<int:id>', methods = ['GET', 'POST'])
+def update(id):
+    form = UserForm()
+    name_to_update = Users.query.get_or_404(id)
+    if request.method == 'POST':
+        name_to_update.name = request.form[ 'name' ]
+        name_to_update.email = request.form[ 'email' ]
+        try:
+            db.session.commit()
+            flash("Utilisateur mis à jour !")
+            return render_template("update.html", 
+                form = form, 
+                name_to_update = name_to_update)
+        except:
+            flash("Erreur, essayer encore")
+            return render_template("update.html", 
+                form = form, 
+                name_to_update = name_to_update)
+    else: 
+        return render_template("update.html", 
+                form = form, 
+                name_to_update = name_to_update)
