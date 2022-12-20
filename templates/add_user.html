@@ -17,7 +17,7 @@
         {% for our_user in our_users %}
             <tr>
             <td>{{ our_user.id }}. <a href=" {{ url_for('update', id = our_user.id) }} ">{{ our_user.name }}</a>
-                 - {{ our_user.email }}</td>
+                 - {{ our_user.email }} - {{ our_user.favorite_color }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -28,12 +28,19 @@
     <div class="shadow p-3 mb-5 bg-body rounded">
     <form method="POST">
         {{ form.hidden_tag() }}
+
         {{ form.name.label(class="form-label") }} <!-- le label de name de la classe Namerform -->
         {{ form.name(class="form-control") }}
+    <br/>
 
-        {{ form.email.label(class="form-label") }} <!-- le label de name de la classe Namerform -->
+        {{ form.email.label(class="form-label") }} <!-- le label de email de la classe Namerform -->
         {{ form.email(class="form-control") }}
     <br/>
+
+        {{ form.favorite_color.label(class="form-label") }} <!-- le label de favorite_color de la classe Namerform -->
+        {{ form.favorite_color(class="form-control") }}
+    <br/>
+
         {{ form.submit(class="btn btn-secondary") }}
     </form>
     </div>  
@@ -43,7 +50,7 @@
 {% for our_user in our_users %}
     <tr>
     <td>{{ our_user.id }}. <a href=" {{ url_for('update', id = our_user.id) }} ">{{ our_user.name }}</a> 
-        - {{ our_user.email }}</td>
+        - {{ our_user.email }} - {{ our_user.favorite_color }}</td>
     </tr>
 {% endfor %}
 </table>

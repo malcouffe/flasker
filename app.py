@@ -4,6 +4,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_migrate import Migrate 
 
 # Création d'un instance flask 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.config['SECRET_KEY'] = "mot de passe à ne pas partager"
 
 # Initialiter la base de données 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 # Création d'un modèle 
@@ -27,19 +29,21 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(200), nullable = False)
     email = db.Column(db.String(120), nullable = False, unique = True)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    favorite_color = db.Column(db.String(120))
+    date_added = db.Column(db.DateTime, default = datetime.utcnow)
 
     def __repr__(self):
         return '<Name %r>' % self.name
 
-# Création du formulaire UserForm
+# Création d'une classe UserForm (formulaire)
 class UserForm(FlaskForm):
     name = StringField("Nom", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
+    favorite_color = StringField("Favorite Color")
     submit = SubmitField("Submit")
 
 
-# Création d'une classe Form
+# Création d'une classe Form (formulaire)
 class NamerForm(FlaskForm):
     name = StringField("Quel est votre nom ?", validators=[DataRequired()])
     submit = SubmitField("Submit")
@@ -53,6 +57,7 @@ def index():
     pizza = ["pizza 1", "pizza 2", "pizza 3"]
     return render_template('index.html', first_name=first_name, stuff=stuff, pizza=pizza)
 
+# Route Name
 @app.route('/user/<string:name>')
 def user(name):
     return render_template('user.html', user_name=name)
@@ -92,16 +97,17 @@ def add_user():
     if form.validate_on_submit():
         user = Users.query.filter_by(email = form.email.data).first() # test si l'adresse mail existe déjà dans la bdd, ne devrait rien renvoyer si pas d'adresse dans la bdd
         if user is None:
-            user = Users(name = form.name.data, email = form.email.data)
+            user = Users(name = form.name.data, email = form.email.data, favorite_color = form.favorite_color.data)
             db.session.add(user)
             db.session.commit()
         name = form.name.data
         form.name.data = ''
         form.email.data = ''
+        form.favorite_color.data = ''
     our_users = Users.query.order_by(Users.date_added)
     return render_template("add_user.html", form = form, name = name, our_users = our_users)
 
-# MAJ utilisateur 
+# MAJ infos utilisateur 
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
     form = UserForm()
@@ -109,6 +115,7 @@ def update(id):
     if request.method == 'POST':
         name_to_update.name = request.form[ 'name' ]
         name_to_update.email = request.form[ 'email' ]
+        name_to_update.favorite_color = request.form[ 'favorite_color' ]
         try:
             db.session.commit()
             flash("Utilisateur mis à jour !")
