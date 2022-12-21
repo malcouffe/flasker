@@ -17,7 +17,8 @@
         {% for our_user in our_users %}
             <tr>
             <td>{{ our_user.id }}. <a href=" {{ url_for('update', id = our_user.id) }} ">{{ our_user.name }}</a>
-                 - {{ our_user.email }} - {{ our_user.favorite_color }}</td>
+                 - {{ our_user.email }} - {{ our_user.favorite_color }} - <a href=" {{ url_for('delete', id = our_user.id) }} ">Suppression</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -42,6 +43,7 @@
     <br/>
 
         {{ form.submit(class="btn btn-secondary") }}
+
     </form>
     </div>  
 <br/><br/><br/>
@@ -50,7 +52,8 @@
 {% for our_user in our_users %}
     <tr>
     <td>{{ our_user.id }}. <a href=" {{ url_for('update', id = our_user.id) }} ">{{ our_user.name }}</a> 
-        - {{ our_user.email }} - {{ our_user.favorite_color }}</td>
+        - {{ our_user.email }} - {{ our_user.favorite_color }} - <a href=" {{ url_for('delete', id = our_user.id) }} ">Suppression</a>
+    </td>
     </tr>
 {% endfor %}
 </table>

@@ -107,7 +107,7 @@ def add_user():
     our_users = Users.query.order_by(Users.date_added)
     return render_template("add_user.html", form = form, name = name, our_users = our_users)
 
-# MAJ infos utilisateur 
+# Route update (MAJ infos utilisateur)
 @app.route('/update/<int:id>', methods = ['GET', 'POST'])
 def update(id):
     form = UserForm()
@@ -121,13 +121,33 @@ def update(id):
             flash("Utilisateur mis à jour !")
             return render_template("update.html", 
                 form = form, 
-                name_to_update = name_to_update)
+                name_to_update = name_to_update,
+                id=id)
         except:
             flash("Erreur, essayer encore")
             return render_template("update.html", 
                 form = form, 
-                name_to_update = name_to_update)
+                name_to_update = name_to_update,
+                id=id)
     else: 
         return render_template("update.html", 
                 form = form, 
-                name_to_update = name_to_update)
+                name_to_update = name_to_update,
+                id=id)
+
+
+# Suppression utilisateur
+@app.route('/delete/<int:id>')
+def delete(id):
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("Utilisateur supprimé")
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template("add_user.html", form = form, name = name, our_users = our_users)
+    except:
+        flash("Erreur, attention")
+        return render_template("add_user.html", form = form, name = name, our_users = our_users)
